@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SKD CPNS WRITE UP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white text-gray-900">
+  <div class="container mx-auto max-w-4xl px-4 py-8">
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold mb-4">
+        <a href="/" class="text-inherit no-underline">CPNS WRITE UP / SKD</a>
+      </h1>
+      
+      <form method="GET" action="" class="mb-6 space-y-4">
+        <div class="flex flex-wrap gap-4 items-center">
+          <div class="flex items-center space-x-2">
+            <label for="category">Category:</label>
+<select name="category" id="category" class="border border-gray-700 px-2 py-1 bg-white">
+  <option value="">All</option>
+  <option value="TIU" <%= (category === 'TIU' ? 'selected' : '') %>>TIU</option>
+  <option value="TWK" <%= (category === 'TWK' ? 'selected' : '') %>>TWK</option>
+  <option value="TKP" <%= (category === 'TKP' ? 'selected' : '') %>>TKP</option>
+</select>
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <label for="type">Type:</label>
+<select name="type" id="type" class="border border-gray-700 px-2 py-1 bg-white">
+  <option value="">All</option>
+  <option value="Deret Angka" <%= (type === 'Deret Angka' ? 'selected' : '') %>>Deret Angka</option>
+  <option value="Verbal Analogi" <%= (type === 'Verbal Analogi' ? 'selected' : '') %>>Verbal Analogi</option>
+  <option value="Silogisme" <%= (type === 'Silogisme' ? 'selected' : '') %>>Silogisme</option>
+  <!-- Add all other type options from your CREATE statement here -->
+</select>
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <label for="search">Search:</label>
+<input type="text" name="search" id="search" 
+       class="border border-gray-700 px-2 py-1 bg-white"
+       value="<%= search %>">
+          </div>
+          
+          <button type="submit" class="border border-gray-700 px-4 py-1 hover:bg-gray-100">
+            Filter
+          </button>
+        </div>
+      </form>
+    </header>
+
+    <main>
+      <ul class="space-y-6">
+        <% if (questions.length > 0) { %>
+          <% questions.forEach(question => { %>
+            <li class="border-b pb-6">
+              <div>
+                <h3 class="text-xl font-semibold mb-2">
+                  <%= question.question %>
+                  <span class="bg-purple-200 text-sm px-2 py-1 ml-2"><%= question.category %></span>
+                </h3>
+                <p class="mb-2">Type: <%= question.type %></p>
+              </div>
+            </li>
+          <% }); %>
+        <% } else { %>
+          <li class="text-center text-gray-500">No questions found.</li>
+        <% } %>
+      </ul>
+
+      <!-- Pagination Links -->
+<div class="pagination mt-8 flex justify-center space-x-2">
+  <% if (page > 1) { %>
+    <%
+      const prevParams = new URLSearchParams();
+      if (category) prevParams.append('category', category);
+      if (type) prevParams.append('type', type);
+      if (search) prevParams.append('search', search);
+      prevParams.append('page', page - 1);
+    %>
+    <a href="?<%= prevParams.toString() %>" class="border border-gray-700 px-3 py-1 hover:bg-gray-100">Previous</a>
+  <% } %>
+  
+  <span class="border border-gray-700 px-3 py-1 bg-gray-800 text-white"><%= page %></span>
+  
+  <% if (questions.length === pageSize) { %>
+    <%
+      const nextParams = new URLSearchParams();
+      if (category) nextParams.append('category', category);
+      if (type) nextParams.append('type', type);
+      if (search) nextParams.append('search', search);
+      nextParams.append('page', page + 1);
+    %>
+    <a href="?<%= nextParams.toString() %>" class="border border-gray-700 px-3 py-1 hover:bg-gray-100">Next</a>
+  <% } %>
+</div>
+    </main>
+  </div>
+</body>
+</html>
